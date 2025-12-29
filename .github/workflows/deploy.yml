@@ -1,4 +1,4 @@
-name: Deploy to MonsterASP.net
+name: Build & Release
 
 on:
   push:
@@ -6,15 +6,6 @@ on:
       - main
       - master
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Deployment environment'
-        required: true
-        default: 'production'
-        type: choice
-        options:
-          - production
-          - staging
 
 env:
   DOTNET_VERSION: '8.0.x'
@@ -23,10 +14,8 @@ env:
 
 jobs:
   build:
-    name: Build Application
+    name: Build & Test
     runs-on: windows-latest
-    outputs:
-      artifact-path: ${{ steps.publish.outputs.path }}
 
     steps:
       - name: Checkout code
@@ -61,97 +50,62 @@ jobs:
         continue-on-error: true
 
       - name: Publish application
-        id: publish
-        run: |
-          dotnet publish -c ${{ env.BUILD_CONFIGURATION }} -o ${{ env.PUBLISH_PATH }} --no-build --verbosity normal
-          echo "path=${{ env.PUBLISH_PATH }}" >> $GITHUB_OUTPUT
+        run: dotnet publish -c ${{ env.BUILD_CONFIGURATION }} -o ${{ env.PUBLISH_PATH }} --no-build --verbosity normal
         shell: pwsh
 
-      - name: Upload artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: published-app
+          name: app-build
           path: ${{ env.PUBLISH_PATH }}
-          retention-days: 5
+          retention-days: 30
 
-  deploy:
-    name: Deploy to MonsterASP.net
+  release:
+    name: Create Release
     needs: build
     runs-on: windows-latest
-    if: (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production') || github.event_name == 'push'
-    environment:
-      name: ${{ github.event.inputs.environment || 'production' }}
-      url: https://stationnement.runasp.net
-
-    steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: published-app
-          path: ${{ env.PUBLISH_PATH }}
-
-      - name: Verify deployment credentials
-        run: |
-          if (-not ${{ secrets.WEBDEPLOY_URL }}) { 
-            throw "Missing WEBDEPLOY_URL secret" 
-          }
-          if (-not ${{ secrets.WEBDEPLOY_USERNAME }}) { 
-            throw "Missing WEBDEPLOY_USERNAME secret" 
-          }
-          if (-not ${{ secrets.WEBDEPLOY_PASSWORD }}) { 
-            throw "Missing WEBDEPLOY_PASSWORD secret" 
-          }
-          Write-Host "✓ All deployment secrets are configured"
-        shell: pwsh
-
-      - name: Deploy via WebDeploy
-        uses: rasmusbuchholdt/simply-web-deploy@2.1.0
-        with:
-          website-name: ${{ secrets.WEBDEPLOY_SITE }}
-          server-computer-name: ${{ secrets.WEBDEPLOY_URL }}
-          server-username: ${{ secrets.WEBDEPLOY_USERNAME }}
-          server-password: ${{ secrets.WEBDEPLOY_PASSWORD }}
-          source-path: ${{ env.PUBLISH_PATH }}
-          target-path: /
-
-      - name: Deployment notification
-        if: always()
-        run: |
-          $status = "${{ job.status }}"
-          $message = "✓ Deployment completed successfully!" | Out-String
-          if ($status -eq "failure") {
-            $message = "✗ Deployment failed. Check logs for details."
-          }
-          Write-Host $message
-        shell: pwsh
-
-  post-deploy:
-    name: Post-Deployment Tasks
-    needs: deploy
-    runs-on: windows-latest
-    if: success()
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create deployment tag
-        run: |
-          $tag = "deploy-$(Get-Date -Format 'yyyy.MM.dd-HHmmss')"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git tag $tag
-          git push origin $tag
-        shell: pwsh
-        continue-on-error: true
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: app-build
+          path: ${{ env.PUBLISH_PATH }}
 
-      - name: Log deployment success
+      - name: Create release archive
         run: |
-          Write-Host "Deployment Summary:"
-          Write-Host "===================="
-          Write-Host "Status: SUCCESS ✓"
-          Write-Host "Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
-          Write-Host "Target: MonsterASP.net"
-          Write-Host "Branch: ${{ github.ref }}"
-          Write-Host "Commit: ${{ github.sha }}"
+          Compress-Archive -Path ${{ env.PUBLISH_PATH }} -DestinationPath stationnement-release.zip
         shell: pwsh
+
+      - name: Get version
+        id: version
+        run: |
+          $version = Get-Date -Format 'yyyy.MM.dd.HHmm'
+          echo "release_version=$version" >> $GITHUB_OUTPUT
+        shell: pwsh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: stationnement-release.zip
+          tag_name: v${{ steps.version.outputs.release_version }}
+          name: Release ${{ steps.version.outputs.release_version }}
+          body: |
+            # Stationnement Release ${{ steps.version.outputs.release_version }}
+            
+            **Build Information:**
+            - Commit: ${{ github.sha }}
+            - Branch: ${{ github.ref_name }}
+            - Author: ${{ github.actor }}
+            - Date: ${{ github.event.head_commit.timestamp }}
+            
+            ## Installation
+            Extract the `stationnement-release.zip` file and follow the deployment guide.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
