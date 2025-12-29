@@ -1,0 +1,44 @@
+name: Deploy to MonsterASP.net
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # Allows manual trigger
+
+env:
+  DOTNET_VERSION: '8.0.x'
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Publish
+      run: dotnet publish -c Release -o ./publish --no-build
+
+    - name: Deploy to MonsterASP.net via WebDeploy
+      uses: rasmusbuchholdt/simply-web-deploy@2.1.0
+      with:
+        website-name: ${{ secrets.WEBDEPLOY_SITE }}
+        server-computer-name: ${{ secrets.WEBDEPLOY_URL }}
+        server-username: ${{ secrets.WEBDEPLOY_USERNAME }}
+        server-password: ${{ secrets.WEBDEPLOY_PASSWORD }}
+        source-path: ./publish
+        target-path: /
+
+    - name: Deployment Complete
+      run: echo "Deployment to MonsterASP.net completed successfully!"
