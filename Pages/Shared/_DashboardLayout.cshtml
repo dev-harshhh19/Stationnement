@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                            400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                            800: '#1e40af', 900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+</head>
+<body class="bg-gray-100 min-h-screen overflow-x-hidden">
+    <div class="flex w-full max-w-full overflow-x-hidden">
+        <!-- Sidebar Toggle Button (hidden when sidebar is open) -->
+        <button id="sidebarToggle" onclick="toggleSidebar()" class="fixed top-4 left-4 z-50 lg:hidden w-10 h-10 bg-white rounded-xl shadow-lg flex items-center justify-center text-gray-700 hover:bg-gray-50 sidebar-toggle-btn">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+        
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-white shadow-lg min-h-screen fixed transition-transform duration-300 transform lg:translate-x-0 -translate-x-full z-40">
+            <div class="p-6">
+                <a href="/Dashboard" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-gray-900">Stationnement</span>
+                </a>
+            </div>
+            <nav class="px-4 space-y-1">
+                <a href="/Dashboard" class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-600 transition nav-item">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/Dashboard/Book" class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-600 transition nav-item">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Book Parking
+                </a>
+                <a href="/Dashboard/Reservations" class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-600 transition nav-item">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Reservations
+                </a>
+                <a href="/Dashboard/Payments" class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-600 transition nav-item">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Payments
+                </a>
+                <a href="/Dashboard/Subscription" class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-600 transition nav-item">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                    </svg>
+                    Subscription
+                </a>
+                <hr class="my-4" />
+                <a href="/Dashboard/Settings" class="flex items-center px-4 py-3 text-gray-700 rounded-xl hover:bg-primary-50 hover:text-primary-600 transition nav-item">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 w-full max-w-full overflow-x-hidden">
+            <!-- Top Bar -->
+            <header class="bg-white shadow-sm py-4 px-4 lg:px-6">
+                <div class="flex items-center justify-between">
+                    <!-- Spacer for mobile hamburger -->
+                    <div class="w-10 lg:hidden"></div>
+                    <!-- Page Title - centered on mobile -->
+                    <h1 class="text-xl font-semibold text-gray-900 text-center flex-1 lg:text-left lg:flex-none">@ViewData["Title"]</h1>
+                    <div class="flex items-center space-x-2 lg:space-x-4">
+                        <!-- Notification Bell -->
+                        <div class="relative">
+                            <button onclick="toggleNotifications()" class="relative text-gray-500 hover:text-gray-700 p-2">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                </svg>
+                                <span id="notifBadge" class="hidden absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">0</span>
+                            </button>
+                            <!-- Notifications Dropdown - responsive width -->
+                            <div id="notifDropdown" class="hidden fixed lg:absolute right-2 lg:right-0 left-2 lg:left-auto mt-2 lg:w-80 bg-white rounded-xl shadow-lg border border-gray-100 z-50">
+                                <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+                                    <span class="font-semibold text-gray-900">Notifications</span>
+                                    <button onclick="markAllRead()" class="text-xs text-primary-600 hover:text-primary-700">Mark all read</button>
+                                </div>
+                                <div id="notifList" class="max-h-80 overflow-y-auto">
+                                    <div class="p-4 text-center text-gray-500 text-sm">Loading...</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
+                            <span class="text-primary-600 font-medium" id="userInitials">U</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="p-4 lg:p-6 w-full max-w-full overflow-x-hidden">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+    <script src="~/js/auth.js" asp-append-version="true"></script>
+    <script>
+        // Toast notification system
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-amber-500',
+                info: 'bg-blue-500'
+            };
+            
+            const icons = {
+                success: '✓',
+                error: '✗',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            toast.className = `pointer-events-auto ${colors[type] || colors.info} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform translate-x-full opacity-0 transition-all duration-300`;
+            toast.innerHTML = `
+                <span class="w-6 h-6 flex items-center justify-center bg-white/20 rounded-full text-sm">${icons[type] || icons.info}</span>
+                <span class="flex-1 text-sm font-medium">${message}</span>
+                <button onclick="this.parentElement.remove()" class="hover:bg-white/20 rounded p-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+            });
+            
+            // Auto remove
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+        // Check auth on dashboard pages
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = Auth.getUser();
+            if (!user) {
+                window.location.href = '/Auth/Login';
+                return;
+            }
+            document.getElementById('userInitials').textContent = 
+                (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
+            
+            // Highlight active navigation item
+            highlightActiveNav();
+            
+            // Load notifications
+            loadNotifications();
+            loadUnreadCount();
+            // Refresh notifications every 30 seconds
+            setInterval(loadUnreadCount, 30000);
+        });
+        
+        function highlightActiveNav() {
+            const currentPath = window.location.pathname.toLowerCase();
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            navItems.forEach(item => {
+                const href = item.getAttribute('href').toLowerCase();
+                // Remove active styles
+                item.classList.remove('bg-primary-50', 'text-primary-600');
+                item.classList.add('text-gray-700');
+                
+                // Check if this nav item matches current path
+                if (currentPath === href || 
+                    (currentPath.startsWith('/dashboard') && href === '/dashboard' && currentPath === '/dashboard') ||
+                    (currentPath.includes(href.replace('/dashboard/', '')) && href !== '/dashboard')) {
+                    // Add active styles
+                    item.classList.add('bg-primary-50', 'text-primary-600');
+                    item.classList.remove('text-gray-700');
+                }
+            });
+        }
+
+        function logout() {
+            Auth.logout();
+            window.location.href = '/';
+        }
+        
+        // Sidebar toggle for mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            const isOpen = !sidebar.classList.contains('-translate-x-full');
+            
+            if (isOpen) {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                toggleBtn.classList.remove('hidden');
+            } else {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                toggleBtn.classList.add('hidden');
+            }
+        }
+        
+        // Notification functions
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notifDropdown');
+            dropdown.classList.toggle('hidden');
+            if (!dropdown.classList.contains('hidden')) {
+                loadNotifications();
+            }
+        }
+        
+        async function loadUnreadCount() {
+            try {
+                const response = await Auth.apiRequest('/api/notification/unread-count');
+                const data = await response.json();
+                const badge = document.getElementById('notifBadge');
+                if (data.success && data.count > 0) {
+                    badge.textContent = data.count > 9 ? '9+' : data.count;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            } catch (e) {}
+        }
+        
+        async function loadNotifications() {
+            const list = document.getElementById('notifList');
+            try {
+                const response = await Auth.apiRequest('/api/notification');
+                const data = await response.json();
+                
+                if (!data.success || data.data.length === 0) {
+                    list.innerHTML = '<div class="p-4 text-center text-gray-500 text-sm">No notifications</div>';
+                    return;
+                }
+                
+                list.innerHTML = data.data.map(n => `
+                    <div class="p-4 border-b border-gray-50 hover:bg-gray-50 ${n.isRead ? 'opacity-60' : ''}" onclick="markRead('${n.id}')">
+                        <div class="flex items-start gap-3">
+                            <div class="w-8 h-8 rounded-full flex items-center justify-center ${
+                                n.type === 'success' ? 'bg-green-100 text-green-600' :
+                                n.type === 'warning' ? 'bg-yellow-100 text-yellow-600' :
+                                n.type === 'error' ? 'bg-red-100 text-red-600' :
+                                'bg-blue-100 text-blue-600'
+                            }">
+                                ${n.type === 'success' ? '✓' : n.type === 'warning' ? '⚠' : n.type === 'error' ? '✗' : 'ℹ'}
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">${n.title}</p>
+                                <p class="text-xs text-gray-500">${n.message}</p>
+                                <p class="text-xs text-gray-400 mt-1">${new Date(n.createdAt).toLocaleString()}</p>
+                            </div>
+                            ${!n.isRead ? '<div class="w-2 h-2 bg-blue-500 rounded-full"></div>' : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                list.innerHTML = '<div class="p-4 text-center text-gray-500 text-sm">Failed to load</div>';
+            }
+        }
+        
+        async function markRead(id) {
+            try {
+                await Auth.apiRequest(`/api/notification/${id}/read`, { method: 'POST' });
+                loadUnreadCount();
+                loadNotifications();
+            } catch (e) {}
+        }
+        
+        async function markAllRead() {
+            try {
+                await Auth.apiRequest('/api/notification/read-all', { method: 'POST' });
+                loadUnreadCount();
+                loadNotifications();
+            } catch (e) {}
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('notifDropdown');
+            const bell = e.target.closest('button[onclick="toggleNotifications()"]');
+            if (!bell && !e.target.closest('#notifDropdown')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+    
+    <!-- Sidebar Overlay for mobile -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()" class="fixed inset-0 bg-black bg-opacity-50 z-30 hidden lg:hidden"></div>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

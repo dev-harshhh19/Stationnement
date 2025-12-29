@@ -1,0 +1,238 @@
+@page
+@model Stationnement.Web.Pages.Dashboard.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_DashboardLayout";
+}
+
+<!-- Welcome Banner -->
+<div class="bg-gradient-to-r from-primary-600 to-primary-800 rounded-2xl p-6 mb-8 text-white">
+    <div class="flex items-center justify-between">
+        <div>
+            <h2 class="text-2xl font-bold mb-2">Welcome back, <span id="welcomeName">User</span>!</h2>
+            <p class="text-primary-100">Here's an overview of your parking activity.</p>
+        </div>
+        <a href="/Dashboard/Book" class="hidden md:inline-flex items-center bg-white text-primary-700 font-semibold py-3 px-6 rounded-xl hover:bg-primary-50 transition shadow-lg">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            Book Parking
+        </a>
+    </div>
+</div>
+
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white rounded-xl p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span>
+        </div>
+        <p class="text-3xl font-bold text-gray-900" id="statActive">0</p>
+        <p class="text-gray-500 text-sm">Active Reservations</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+        </div>
+        <p class="text-3xl font-bold text-gray-900" id="statUpcoming">0</p>
+        <p class="text-gray-500 text-sm">Upcoming Reservations</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm">
+        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <p class="text-3xl font-bold text-gray-900" id="statHours">0</p>
+        <p class="text-gray-500 text-sm">Total Hours Parked</p>
+    </div>
+    <div class="bg-white rounded-xl p-6 shadow-sm">
+        <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mb-4">
+            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+        </div>
+        <p class="text-3xl font-bold text-gray-900">₹<span id="statSavings">0</span></p>
+        <p class="text-gray-500 text-sm">Total Saved</p>
+    </div>
+</div>
+
+<div class="grid lg:grid-cols-3 gap-8">
+    <!-- Upcoming Reservations -->
+    <div class="lg:col-span-2 bg-white rounded-xl shadow-sm">
+        <div class="p-6 border-b flex items-center justify-between">
+            <h3 class="text-lg font-semibold text-gray-900">Upcoming Reservations</h3>
+            <a href="/Dashboard/Reservations" class="text-primary-600 hover:text-primary-700 text-sm font-medium">View All →</a>
+        </div>
+        <div class="p-6" id="upcomingList">
+            <div class="text-center py-8">
+                <svg class="w-12 h-12 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <p class="text-gray-500 mb-4">No upcoming reservations</p>
+                <a href="/Dashboard/Book" class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium">
+                    Book your first spot
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="space-y-6">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+            <div class="space-y-3">
+                <a href="/Dashboard/Book" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div class="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-900 text-sm">New Reservation</p>
+                        <p class="text-gray-500 text-xs">Book a parking spot</p>
+                    </div>
+                </a>
+                <a href="/Dashboard/Barcodes" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v3m8-6v10M4 7h16M4 7l8 5l8-5M4 14v3h16v-3" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-900 text-sm">View Barcodes</p>
+                        <p class="text-gray-500 text-xs">Access your entry codes</p>
+                    </div>
+                </a>
+                <a href="/Dashboard/Payments" class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                        <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-900 text-sm">Payment History</p>
+                        <p class="text-gray-500 text-xs">View invoices & receipts</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    let dashboardUpdateInterval = null;
+    
+    document.addEventListener('DOMContentLoaded', async function() {
+        const user = Auth.getUser();
+        if (user) {
+            document.getElementById('welcomeName').textContent = user.firstName || 'User';
+        }
+        await Promise.all([
+            loadUpcomingReservations(),
+            loadDashboardStats()
+        ]);
+        
+        // Update reservation statuses every 30 seconds to show active reservations in real-time
+        dashboardUpdateInterval = setInterval(() => {
+            loadUpcomingReservations();
+            loadDashboardStats();
+        }, 30000);
+    });
+
+    async function loadDashboardStats() {
+        try {
+            const response = await Auth.apiRequest('/api/reservation/stats');
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                document.getElementById('statActive').textContent = data.data.activeCount || 0;
+                document.getElementById('statUpcoming').textContent = data.data.upcomingCount || 0;
+                document.getElementById('statHours').textContent = data.data.totalHoursParked || 0;
+                document.getElementById('statSavings').textContent = (data.data.totalSaved || 0).toFixed(0);
+            }
+        } catch (error) {
+            console.error('Error loading stats:', error);
+        }
+    }
+
+    async function loadUpcomingReservations() {
+        try {
+            const response = await Auth.apiRequest('/api/reservation/upcoming');
+            const data = await response.json();
+            
+            if (data.success && data.data && data.data.length > 0) {
+                let activeCount = 0;
+                
+                // Filter out invalid reservations (invalid dates only - show all with valid dates)
+                const validReservations = data.data.filter(r => {
+                    const startDate = new Date(r.startTime);
+                    return startDate.getFullYear() >= 2020;
+                });
+                
+                if (validReservations.length === 0) {
+                    document.getElementById('statActive').textContent = '0';
+                    document.getElementById('statUpcoming').textContent = '0';
+                    return;
+                }
+                
+                const now = new Date();
+                let upcomingCount = 0;
+                
+                document.getElementById('upcomingList').innerHTML = validReservations.slice(0, 5).map(r => {
+                    const startDate = new Date(r.startTime);
+                    const endDate = new Date(r.endTime);
+                    
+                    // Determine if reservation is currently active
+                    const isActive = r.status === 'confirmed' && startDate <= now && endDate >= now;
+                    if (isActive) {
+                        activeCount++;
+                    } else if (startDate > now) {
+                        upcomingCount++;
+                    }
+                    
+                    const statusBadge = isActive 
+                        ? '<span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Active</span>'
+                        : '<span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">Upcoming</span>';
+                    
+                    return `
+                    <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl mb-3">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                                <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900">${r.locationName || 'Reservation'}</p>
+                                <p class="text-sm text-gray-500">${startDate.toLocaleDateString('en-IN')} • ${startDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            ${statusBadge}
+                            <p class="text-sm text-gray-500 mt-1">Rs. ${(r.totalAmount || 0).toFixed(2)}</p>
+                        </div>
+                    </div>`;
+                }).join('');
+                
+                // Update counts: Active = currently active, Upcoming = future confirmed reservations
+                document.getElementById('statActive').textContent = activeCount;
+                document.getElementById('statUpcoming').textContent = upcomingCount;
+            }
+        } catch (error) {
+            console.error('Error loading reservations:', error);
+        }
+    }
+</script>
+}

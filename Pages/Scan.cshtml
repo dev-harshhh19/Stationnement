@@ -1,0 +1,286 @@
+@page
+@{
+    ViewData["Title"] = "Verify Reservation";
+}
+
+<section class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-12">
+    <div class="max-w-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="text-center mb-8">
+            <a href="/" class="inline-flex items-center gap-2 text-white mb-4">
+                <svg class="h-8 w-8 text-primary-400" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span class="text-xl font-bold">Stationnement</span>
+            </a>
+            <h1 class="text-2xl font-bold text-white">Barcode Verification</h1>
+            <p class="text-gray-400 mt-2">Scan result for parking reservation</p>
+        </div>
+
+        <!-- Input Form -->
+        <div class="bg-white/10 backdrop-blur rounded-2xl p-6 mb-6">
+            <label class="block text-white font-medium mb-2">Enter Barcode / QR Code</label>
+            <div class="flex gap-3">
+                <input type="text" id="qrCodeInput" placeholder="e.g., PKG-ABC123XYZ" 
+                    class="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-primary-500 outline-none" />
+                <button onclick="verifyCode()" id="verifyBtn" class="px-6 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition">
+                    Verify
+                </button>
+            </div>
+        </div>
+
+        <!-- Result Container -->
+        <div id="resultContainer" class="hidden">
+            <!-- Loading -->
+            <div id="loadingState" class="hidden text-center py-12">
+                <div class="spinner mx-auto mb-4"></div>
+                <p class="text-gray-400">Verifying...</p>
+            </div>
+
+            <!-- Valid Result -->
+            <div id="validResult" class="hidden">
+                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+                    <!-- Status Banner -->
+                    <div id="statusBanner" class="px-6 py-4 text-center">
+                        <div id="statusIcon" class="text-4xl mb-2"></div>
+                        <h2 id="statusTitle" class="text-xl font-bold"></h2>
+                        <p id="timeMessage" class="text-sm opacity-80"></p>
+                    </div>
+
+                    <!-- Reservation Details -->
+                    <div class="p-6 space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-xs text-gray-500 uppercase tracking-wide">Reservation Code</p>
+                                <p id="resCode" class="font-mono font-bold text-gray-900 text-lg"></p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-xs text-gray-500 uppercase tracking-wide">Status</p>
+                                <p id="resStatus" class="font-semibold text-gray-900"></p>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                Location Details
+                            </h3>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p id="locationName" class="font-semibold text-gray-900"></p>
+                                <p id="locationAddress" class="text-sm text-gray-600"></p>
+                                <p class="text-sm text-gray-500 mt-2">Slot: <span id="slotCode" class="font-mono font-medium"></span></p>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Time Details
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <p class="text-xs text-gray-500">Start Time</p>
+                                    <p id="startTime" class="font-medium text-gray-900"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <p class="text-xs text-gray-500">End Time</p>
+                                    <p id="endTime" class="font-medium text-gray-900"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"/></svg>
+                                Vehicle Details
+                            </h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <p class="text-xs text-gray-500">License Plate</p>
+                                    <p id="vehiclePlate" class="font-mono font-bold text-gray-900"></p>
+                                </div>
+                                <div class="bg-gray-50 rounded-xl p-4">
+                                    <p class="text-xs text-gray-500">Vehicle Type</p>
+                                    <p id="vehicleType" class="font-medium text-gray-900 capitalize"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h3 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                                <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                                Payment
+                            </h3>
+                            <div class="bg-gray-50 rounded-xl p-4 flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-500">Total Amount</p>
+                                    <p id="totalAmount" class="text-2xl font-bold text-gray-900"></p>
+                                </div>
+                                <div id="discountBadge" class="hidden bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    Saved ₹<span id="discountAmount"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invalid Result -->
+            <div id="invalidResult" class="hidden">
+                <div class="bg-red-500/20 border border-red-500/30 rounded-2xl p-8 text-center">
+                    <div class="text-6xl mb-4">❌</div>
+                    <h2 class="text-2xl font-bold text-white mb-2">Invalid Barcode</h2>
+                    <p id="errorMessage" class="text-red-200"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-8 text-gray-500 text-sm">
+            <p>Powered by Stationnement • Smart Parking</p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255,255,255,0.1);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    @@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+<script>
+    // Toast notification system
+    function showToast(message, type = 'info', duration = 4000) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        const colors = { success: 'bg-green-500', error: 'bg-red-500', warning: 'bg-amber-500', info: 'bg-blue-500' };
+        const icons = { success: '✓', error: '✗', warning: '⚠', info: 'ℹ' };
+        toast.className = `pointer-events-auto ${colors[type] || colors.info} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform translate-x-full opacity-0 transition-all duration-300`;
+        toast.innerHTML = `<span class="w-6 h-6 flex items-center justify-center bg-white/20 rounded-full text-sm">${icons[type] || icons.info}</span><span class="flex-1 text-sm font-medium">${message}</span><button onclick="this.parentElement.remove()" class="hover:bg-white/20 rounded p-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>`;
+        container.appendChild(toast);
+        requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+        setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, duration);
+    }
+    // Check URL for code parameter
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+            document.getElementById('qrCodeInput').value = code;
+            verifyCode();
+        }
+    });
+
+    async function verifyCode() {
+        const code = document.getElementById('qrCodeInput').value.trim();
+        if (!code) {
+            showToast('Please enter a barcode/QR code', 'warning');
+            return;
+        }
+
+        const resultContainer = document.getElementById('resultContainer');
+        const loadingState = document.getElementById('loadingState');
+        const validResult = document.getElementById('validResult');
+        const invalidResult = document.getElementById('invalidResult');
+
+        // Show loading
+        resultContainer.classList.remove('hidden');
+        loadingState.classList.remove('hidden');
+        validResult.classList.add('hidden');
+        invalidResult.classList.add('hidden');
+
+        try {
+            const response = await fetch(`/api/reservation/verify/${encodeURIComponent(code)}`);
+            const data = await response.json();
+
+            loadingState.classList.add('hidden');
+
+            if (data.success && data.data) {
+                showValidResult(data);
+            } else {
+                showInvalidResult(data.message || 'Invalid barcode');
+            }
+        } catch (error) {
+            loadingState.classList.add('hidden');
+            showInvalidResult('Failed to verify barcode. Please try again.');
+        }
+    }
+
+    function showValidResult(data) {
+        const validResult = document.getElementById('validResult');
+        const statusBanner = document.getElementById('statusBanner');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const timeMessage = document.getElementById('timeMessage');
+        const r = data.data;
+
+        // Set status banner based on validity
+        if (data.validityStatus === 'ACTIVE') {
+            statusBanner.className = 'px-6 py-4 text-center bg-green-500 text-white';
+            statusIcon.textContent = '✓';
+            statusTitle.textContent = 'VALID - Active Reservation';
+        } else if (data.validityStatus === 'NOT_STARTED') {
+            statusBanner.className = 'px-6 py-4 text-center bg-blue-500 text-white';
+            statusIcon.textContent = '⏳';
+            statusTitle.textContent = 'VALID - Not Started Yet';
+        } else if (data.validityStatus === 'EXPIRED') {
+            statusBanner.className = 'px-6 py-4 text-center bg-red-500 text-white';
+            statusIcon.textContent = '⏰';
+            statusTitle.textContent = 'EXPIRED - No Longer Valid';
+        } else if (data.validityStatus === 'CANCELLED') {
+            statusBanner.className = 'px-6 py-4 text-center bg-gray-500 text-white';
+            statusIcon.textContent = '🚫';
+            statusTitle.textContent = 'CANCELLED';
+        }
+
+        timeMessage.textContent = data.timeMessage;
+
+        // Fill in details
+        document.getElementById('resCode').textContent = r.reservationCode || 'N/A';
+        document.getElementById('resStatus').textContent = (r.status || '').toUpperCase();
+        document.getElementById('locationName').textContent = r.locationName || 'Unknown Location';
+        document.getElementById('locationAddress').textContent = r.locationAddress || '';
+        document.getElementById('slotCode').textContent = r.slotCode || 'N/A';
+        document.getElementById('startTime').textContent = formatDateTime(r.startTime);
+        document.getElementById('endTime').textContent = formatDateTime(r.endTime);
+        document.getElementById('vehiclePlate').textContent = r.vehiclePlate || 'N/A';
+        document.getElementById('vehicleType').textContent = r.vehicleType || 'N/A';
+        document.getElementById('totalAmount').textContent = '₹' + (r.totalAmount || 0).toFixed(2);
+
+        // Show discount if any
+        if (r.discountAmount && r.discountAmount > 0) {
+            document.getElementById('discountBadge').classList.remove('hidden');
+            document.getElementById('discountAmount').textContent = r.discountAmount.toFixed(2);
+        } else {
+            document.getElementById('discountBadge').classList.add('hidden');
+        }
+
+        validResult.classList.remove('hidden');
+    }
+
+    function showInvalidResult(message) {
+        document.getElementById('errorMessage').textContent = message;
+        document.getElementById('invalidResult').classList.remove('hidden');
+    }
+
+    function formatDateTime(dateStr) {
+        if (!dateStr) return 'N/A';
+        const date = new Date(dateStr);
+        return date.toLocaleString('en-IN', { 
+            day: '2-digit', 
+            month: 'short', 
+            year: 'numeric',
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
+    }
+</script>

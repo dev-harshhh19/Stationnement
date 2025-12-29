@@ -1,0 +1,93 @@
+@page
+@model Stationnement.Web.Pages.Admin.PricingModel
+@{
+    ViewData["Title"] = "Pricing Management";
+    Layout = "_AdminLayout";
+}
+
+<div class="mb-6">
+    <h2 class="text-xl font-semibold text-gray-900">Pricing Rules</h2>
+    <p class="text-gray-500">Configure dynamic pricing for parking slots</p>
+</div>
+
+<div class="grid lg:grid-cols-2 gap-6">
+    <!-- Base Pricing -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Base Pricing</h3>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">Standard Slot</span>
+                <span class="font-semibold">₹25/hr</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
+                <span class="text-gray-700">Premium Slot</span>
+                <span class="font-semibold text-yellow-700">₹37.50/hr (1.5x)</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                <span class="text-gray-700">EV Slot</span>
+                <span class="font-semibold text-purple-700">₹50/hr (2x)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Time-based Modifiers -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Time-based Modifiers</h3>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">Peak Hours (9AM-6PM)</span>
+                <span class="font-semibold text-red-600">+15%</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">Off-peak (6PM-9AM)</span>
+                <span class="font-semibold text-green-600">-10%</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">Weekends</span>
+                <span class="font-semibold text-red-600">+10%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Duration Discounts -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Duration Discounts</h3>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                <span class="text-gray-700">4+ hours</span>
+                <span class="font-semibold text-green-600">-5%</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                <span class="text-gray-700">8+ hours (full day)</span>
+                <span class="font-semibold text-green-600">-10%</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                <span class="text-gray-700">24+ hours</span>
+                <span class="font-semibold text-green-600">-15%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Demand-based -->
+    <div class="bg-white rounded-xl shadow-sm p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Demand-based Pricing</h3>
+        <div class="space-y-4">
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">High demand (&lt;20% available)</span>
+                <span class="font-semibold text-red-600">+20%</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">Normal demand (20-50%)</span>
+                <span class="font-semibold">Base price</span>
+            </div>
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <span class="text-gray-700">Low demand (&gt;50% available)</span>
+                <span class="font-semibold text-green-600">-5%</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4">
+    <p class="text-blue-700 text-sm"><strong>Note:</strong> Pricing rules are applied dynamically. Edit pricing in <code>Services/PricingService.cs</code>.</p>
+</div>

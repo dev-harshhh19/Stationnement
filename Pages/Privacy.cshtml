@@ -1,0 +1,186 @@
+﻿@page
+@model Stationnement.Web.Pages.PrivacyModel
+@{
+    ViewData["Title"] = "Privacy Policy";
+}
+
+<section class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="text-primary-200 font-semibold text-sm uppercase tracking-wider">Legal</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mt-2 mb-4">Privacy Policy</h1>
+        <p class="text-primary-100 text-lg">Last updated: December 2025</p>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Quick Navigation -->
+        <div class="bg-gray-50 rounded-2xl p-6 mb-12">
+            <h3 class="font-semibold text-gray-900 mb-4">Quick Navigation</h3>
+            <div class="grid md:grid-cols-3 gap-3">
+                <a href="#info-collect" class="text-primary-600 hover:text-primary-700 text-sm">→ Information We Collect</a>
+                <a href="#how-use" class="text-primary-600 hover:text-primary-700 text-sm">→ How We Use Your Info</a>
+                <a href="#data-sharing" class="text-primary-600 hover:text-primary-700 text-sm">→ Data Sharing</a>
+                <a href="#security" class="text-primary-600 hover:text-primary-700 text-sm">→ Data Security</a>
+                <a href="#your-rights" class="text-primary-600 hover:text-primary-700 text-sm">→ Your Rights</a>
+                <a href="#contact" class="text-primary-600 hover:text-primary-700 text-sm">→ Contact Us</a>
+            </div>
+        </div>
+
+        <!-- Content Cards -->
+        <div class="space-y-8">
+            <!-- Introduction -->
+            <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">1. Introduction</h2>
+                        <p class="text-gray-600">At Stationnement ("we", "our", or "us"), we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our parking management services.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information We Collect -->
+            <div id="info-collect" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">2. Information We Collect</h2>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <h4 class="font-semibold text-gray-900 mb-2">Personal Information</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Name, email, phone number</li>
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Vehicle license plate & type</li>
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Payment information (via UPI)</li>
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Location data for parking search</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <h4 class="font-semibold text-gray-900 mb-2">Usage Information</h4>
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Booking history & patterns</li>
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Device info & IP address</li>
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>Cookies & tracking data</li>
+                                    <li class="flex items-start gap-2"><span class="text-primary-500">•</span>App interaction logs</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How We Use -->
+            <div id="how-use" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">3. How We Use Your Information</h2>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div class="flex items-center gap-2 text-gray-600"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Provide parking services</div>
+                            <div class="flex items-center gap-2 text-gray-600"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Process payments</div>
+                            <div class="flex items-center gap-2 text-gray-600"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Send booking confirmations</div>
+                            <div class="flex items-center gap-2 text-gray-600"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Personalize experience</div>
+                            <div class="flex items-center gap-2 text-gray-600"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Improve our services</div>
+                            <div class="flex items-center gap-2 text-gray-600"><svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Legal compliance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Sharing -->
+            <div id="data-sharing" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">4. Data Sharing</h2>
+                        <div class="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+                            <p class="text-green-800 font-medium">🔒 We do NOT sell your personal information.</p>
+                        </div>
+                        <p class="text-gray-600 mb-3">We may share data with:</p>
+                        <ul class="space-y-2 text-gray-600">
+                            <li><strong>Parking Operators:</strong> To facilitate your reservation</li>
+                            <li><strong>Payment Processors:</strong> For secure payment processing</li>
+                            <li><strong>Service Providers:</strong> Cloud hosting, analytics</li>
+                            <li><strong>Legal Authorities:</strong> When required by law</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security -->
+            <div id="security" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">5. Data Security</h2>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">HTTPS/TLS encryption</span></div>
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Data encryption at rest</span></div>
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Secure password hashing</span></div>
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Regular security audits</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your Rights -->
+            <div id="your-rights" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">6. Your Rights</h2>
+                        <div class="grid md:grid-cols-3 gap-3">
+                            <div class="bg-gray-50 rounded-xl p-4 text-center"><span class="text-2xl mb-2 block">📄</span><h4 class="font-semibold text-gray-900 text-sm">Access</h4><p class="text-xs text-gray-500">Request your data copy</p></div>
+                            <div class="bg-gray-50 rounded-xl p-4 text-center"><span class="text-2xl mb-2 block">✏️</span><h4 class="font-semibold text-gray-900 text-sm">Rectify</h4><p class="text-xs text-gray-500">Correct inaccurate data</p></div>
+                            <div class="bg-gray-50 rounded-xl p-4 text-center"><span class="text-2xl mb-2 block">🗑️</span><h4 class="font-semibold text-gray-900 text-sm">Erasure</h4><p class="text-xs text-gray-500">Request data deletion</p></div>
+                            <div class="bg-gray-50 rounded-xl p-4 text-center"><span class="text-2xl mb-2 block">📤</span><h4 class="font-semibold text-gray-900 text-sm">Portability</h4><p class="text-xs text-gray-500">Export your data</p></div>
+                            <div class="bg-gray-50 rounded-xl p-4 text-center"><span class="text-2xl mb-2 block">🚫</span><h4 class="font-semibold text-gray-900 text-sm">Object</h4><p class="text-xs text-gray-500">Opt-out of processing</p></div>
+                            <div class="bg-gray-50 rounded-xl p-4 text-center"><span class="text-2xl mb-2 block">↩️</span><h4 class="font-semibold text-gray-900 text-sm">Withdraw</h4><p class="text-xs text-gray-500">Revoke consent</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div id="contact" class="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 rounded-2xl p-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">Contact Us</h2>
+                        <p class="text-gray-600 mb-4">For privacy-related inquiries:</p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="mailto:nikamharshadshivaji@gmail.com" class="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-primary-600 hover:bg-primary-600 hover:text-white transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                nikamharshadshivaji@gmail.com
+                            </a>
+                            <span class="flex items-center gap-2 text-gray-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                Kalyan, Mumbai, India
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Updated Note -->
+        <div class="mt-12 text-center text-sm text-gray-500">
+            <p>We may update this Privacy Policy periodically. Significant changes will be notified via email.</p>
+        </div>
+    </div>
+</section>

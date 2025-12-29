@@ -1,0 +1,206 @@
+@page
+@model Stationnement.Web.Pages.PricingModel
+@{
+    ViewData["Title"] = "Pricing";
+}
+
+<section class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="text-primary-200 font-semibold text-sm uppercase tracking-wider animate-fade-in">Simple Pricing</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mt-2 mb-4 animate-slide-up">Choose Your Plan</h1>
+        <p class="text-primary-100 text-lg max-w-2xl mx-auto animate-fade-in">Unlock premium parking features with our flexible subscription plans</p>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Toggle (for display only, prices shown are monthly) -->
+        <div class="flex justify-center mb-12">
+            <div class="bg-gray-100 p-1 rounded-xl inline-flex">
+                <button onclick="togglePricing('monthly')" id="monthlyBtn" class="px-6 py-2 rounded-lg font-medium bg-white shadow text-gray-900 transition">Monthly</button>
+                <button onclick="togglePricing('annual')" id="annualBtn" class="px-6 py-2 rounded-lg font-medium text-gray-600 transition">Annual <span class="text-green-600 text-sm">Save 20%</span></button>
+            </div>
+        </div>
+
+        <!-- Pricing Cards - 4 Tiers matching Subscription page -->
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <!-- Free -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Free</h3>
+                <div class="mb-4">
+                    <span class="text-4xl font-bold text-gray-900">₹0</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">Pay as you go</p>
+                <ul class="space-y-3 mb-6 text-sm">
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Standard booking</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Barcode entry</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Email receipts</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Basic support</span></li>
+                </ul>
+                <a href="/Auth/Register" class="block w-full text-center py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition">Get Started</a>
+            </div>
+
+            <!-- Basic -->
+            <div class="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition transform hover:-translate-y-1">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Basic</h3>
+                <div class="mb-4">
+                    <span class="text-4xl font-bold text-gray-900" id="basicPrice">₹199</span>
+                    <span class="text-gray-500">/mo</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">5% discount on all bookings</p>
+                <ul class="space-y-3 mb-6 text-sm">
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600"><strong>5% discount</strong> on bookings</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Priority booking</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Email + SMS alerts</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Extended support</span></li>
+                </ul>
+                <a href="/Auth/Register" class="block w-full text-center py-3 bg-gray-800 text-white rounded-xl font-medium hover:bg-gray-900 transition">Subscribe</a>
+            </div>
+
+            <!-- Pro - Popular -->
+            <div class="bg-white border-2 border-primary-500 rounded-2xl p-6 hover:shadow-xl transition transform hover:-translate-y-1 relative">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary-600 text-white text-xs font-medium px-3 py-1 rounded-full">Most Popular</span>
+                <h3 class="text-xl font-bold text-gray-900 mb-2 mt-2">Pro</h3>
+                <div class="mb-4">
+                    <span class="text-4xl font-bold text-gray-900" id="proPrice">₹499</span>
+                    <span class="text-gray-500">/mo</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">10% discount on all bookings</p>
+                <ul class="space-y-3 mb-6 text-sm">
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600"><strong>10% discount</strong> on bookings</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Priority booking</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Free cancellation</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">24/7 priority support</span></li>
+                </ul>
+                <a href="/Auth/Register" class="block w-full text-center py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition">Subscribe Now</a>
+            </div>
+
+            <!-- Premium Plus -->
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-400 rounded-2xl p-6 hover:shadow-xl transition transform hover:-translate-y-1 relative">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-medium px-3 py-1 rounded-full flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                    Premium
+                </span>
+                <h3 class="text-xl font-bold text-amber-700 mb-2 mt-2">Premium Plus</h3>
+                <div class="mb-4">
+                    <span class="text-4xl font-bold text-amber-600" id="premiumPrice">₹999</span>
+                    <span class="text-gray-500">/mo</span>
+                </div>
+                <p class="text-sm text-gray-500 mb-6">25% discount + Premium slots</p>
+                <ul class="space-y-3 mb-6 text-sm">
+                    <li class="flex items-start"><svg class="w-4 h-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600"><strong>25% discount</strong> on bookings</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg><span class="text-amber-700 font-medium">Premium Parking Slots</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">VIP support</span></li>
+                    <li class="flex items-start"><svg class="w-4 h-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-gray-600">Free cancellation always</span></li>
+                </ul>
+                <a href="/Auth/Register" class="block w-full text-center py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium hover:from-amber-600 hover:to-orange-600 transition">Get Premium</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Feature Comparison -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Compare Plans</span>
+            <h2 class="text-3xl font-bold text-gray-900 mt-2">Feature Comparison</h2>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <table class="w-full">
+                <thead>
+                    <tr class="bg-gray-50">
+                        <th class="text-left px-6 py-4 font-semibold text-gray-900">Feature</th>
+                        <th class="text-center px-4 py-4 font-semibold text-gray-900">Free</th>
+                        <th class="text-center px-4 py-4 font-semibold text-gray-900">Basic</th>
+                        <th class="text-center px-4 py-4 font-semibold text-primary-600">Pro</th>
+                        <th class="text-center px-4 py-4 font-semibold text-amber-600">Premium+</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr><td class="px-6 py-4 text-gray-600">Booking Discount</td><td class="text-center px-4 py-4 text-gray-500">0%</td><td class="text-center px-4 py-4">5%</td><td class="text-center px-4 py-4 text-primary-600 font-medium">10%</td><td class="text-center px-4 py-4 text-amber-600 font-medium">25%</td></tr>
+                    <tr class="bg-gray-50"><td class="px-6 py-4 text-gray-600">Priority Booking</td><td class="text-center px-4 py-4 text-gray-400">✗</td><td class="text-center px-4 py-4 text-green-500">✓</td><td class="text-center px-4 py-4 text-green-500">✓</td><td class="text-center px-4 py-4 text-green-500">✓</td></tr>
+                    <tr><td class="px-6 py-4 text-gray-600">Free Cancellation</td><td class="text-center px-4 py-4 text-gray-400">✗</td><td class="text-center px-4 py-4 text-gray-400">✗</td><td class="text-center px-4 py-4 text-green-500">✓</td><td class="text-center px-4 py-4 text-green-500">✓</td></tr>
+                    <tr class="bg-gray-50"><td class="px-6 py-4 text-gray-600">Premium Parking Slots</td><td class="text-center px-4 py-4 text-gray-400">✗</td><td class="text-center px-4 py-4 text-gray-400">✗</td><td class="text-center px-4 py-4 text-gray-400">✗</td><td class="text-center px-4 py-4 text-amber-500">⭐</td></tr>
+                    <tr><td class="px-6 py-4 text-gray-600">Support Level</td><td class="text-center px-4 py-4 text-gray-500">Basic</td><td class="text-center px-4 py-4">Extended</td><td class="text-center px-4 py-4">Priority</td><td class="text-center px-4 py-4 text-amber-600 font-medium">VIP</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Got Questions?</span>
+            <h2 class="text-3xl font-bold text-gray-900 mt-2">Frequently Asked Questions</h2>
+        </div>
+        <div class="space-y-4">
+            <details class="bg-gray-50 rounded-xl p-6 group cursor-pointer">
+                <summary class="font-semibold text-gray-900 flex justify-between items-center">Can I cancel my subscription anytime?<svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></summary>
+                <p class="mt-3 text-gray-600">Yes, you can cancel anytime from your dashboard. Your benefits remain active until the end of your billing period.</p>
+            </details>
+            <details class="bg-gray-50 rounded-xl p-6 group cursor-pointer">
+                <summary class="font-semibold text-gray-900 flex justify-between items-center">How does the discount work?<svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></summary>
+                <p class="mt-3 text-gray-600">Your subscription discount is automatically applied at checkout when you're logged in. No promo codes needed!</p>
+            </details>
+            <details class="bg-gray-50 rounded-xl p-6 group cursor-pointer">
+                <summary class="font-semibold text-gray-900 flex justify-between items-center">What are Premium Parking Slots?<svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></summary>
+                <p class="mt-3 text-gray-600">Premium slots are the best parking spots - closer to entrances, covered areas, and EV charging stations. Only available to Premium Plus subscribers.</p>
+            </details>
+            <details class="bg-gray-50 rounded-xl p-6 group cursor-pointer">
+                <summary class="font-semibold text-gray-900 flex justify-between items-center">What payment methods do you accept?<svg class="w-5 h-5 text-gray-500 group-open:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg></summary>
+                <p class="mt-3 text-gray-600">We accept UPI (GPay, PhonePe, Paytm), debit/credit cards, and net banking. All payments are secure and encrypted.</p>
+            </details>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-16 bg-primary-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-white mb-4">Ready to get started?</h2>
+        <p class="text-primary-100 mb-8">Join thousands of happy drivers using Stationnement.</p>
+        <a href="/Auth/Register" class="inline-block bg-white text-primary-700 font-bold py-4 px-8 rounded-xl hover:bg-primary-50 transition shadow-lg transform hover:scale-105">
+            Start Free Today
+        </a>
+    </div>
+</section>
+
+<style>
+    @@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+    @@keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+    .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
+</style>
+
+@section Scripts {
+<script>
+function togglePricing(type) {
+    const monthlyBtn = document.getElementById('monthlyBtn');
+    const annualBtn = document.getElementById('annualBtn');
+    const basicPrice = document.getElementById('basicPrice');
+    const proPrice = document.getElementById('proPrice');
+    const premiumPrice = document.getElementById('premiumPrice');
+    
+    if (type === 'annual') {
+        monthlyBtn.classList.remove('bg-white', 'shadow', 'text-gray-900');
+        monthlyBtn.classList.add('text-gray-600');
+        annualBtn.classList.add('bg-white', 'shadow', 'text-gray-900');
+        annualBtn.classList.remove('text-gray-600');
+        basicPrice.textContent = '₹159';
+        proPrice.textContent = '₹399';
+        premiumPrice.textContent = '₹799';
+    } else {
+        annualBtn.classList.remove('bg-white', 'shadow', 'text-gray-900');
+        annualBtn.classList.add('text-gray-600');
+        monthlyBtn.classList.add('bg-white', 'shadow', 'text-gray-900');
+        monthlyBtn.classList.remove('text-gray-600');
+        basicPrice.textContent = '₹199';
+        proPrice.textContent = '₹499';
+        premiumPrice.textContent = '₹999';
+    }
+}
+</script>
+}

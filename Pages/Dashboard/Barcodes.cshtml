@@ -1,0 +1,180 @@
+@page
+@model Stationnement.Web.Pages.Dashboard.BarcodesModel
+@{
+    ViewData["Title"] = "My Barcodes";
+    Layout = "_DashboardLayout";
+}
+
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="text-xl font-semibold text-gray-900">My Barcodes</h2>
+        <p class="text-gray-500">Access codes for your parking reservations</p>
+    </div>
+</div>
+
+<div id="barcodesContainer" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="col-span-full p-8 text-center text-gray-500">Loading barcodes...</div>
+</div>
+
+<!-- Barcode Modal -->
+<div id="barcodeModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-8 text-center">
+        <div id="barcodeDisplay" class="w-full h-24 mx-auto mb-4 bg-gray-50 rounded-xl flex items-center justify-center p-4">
+            <!-- Barcode SVG -->
+            <svg id="modalBarcode" class="w-full h-full"></svg>
+        </div>
+        <p class="font-semibold text-gray-900 mb-1" id="modalLocation">Parking Location</p>
+        <p class="text-sm text-gray-500 mb-2" id="modalTime">Time details</p>
+        <p class="text-xl font-bold text-primary-600 mb-2" id="modalAmount"></p>
+        <p class="text-xs text-gray-400 mb-4 font-mono" id="modalCode">STN-XXXXXXXX</p>
+        <p class="text-xs text-gray-500 mb-4">Scan this barcode at the parking scanner</p>
+        <button onclick="closeBarcodeModal()" class="w-full py-3 bg-primary-600 text-white rounded-xl font-medium">Close</button>
+    </div>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+<script>
+let barcodeUpdateInterval = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadBarcodes();
+    
+    // Refresh barcodes every 30 seconds to remove expired ones
+    barcodeUpdateInterval = setInterval(loadBarcodes, 30000);
+});
+
+async function loadBarcodes() {
+    const container = document.getElementById('barcodesContainer');
+    try {
+        const response = await Auth.apiRequest('/api/reservation');
+        const data = await response.json();
+        
+        if (!data.success || !data.data || data.data.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v3m8-6v10M4 7h16M4 7l8 5l8-5M4 14v3h16v-3"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Active Barcodes</h3>
+                    <p class="text-gray-500 mb-4">Book a parking spot to get a barcode</p>
+                    <a href="/Dashboard/Book" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg">Book Now</a>
+                </div>`;
+            return;
+        }
+
+        const now = new Date();
+        
+        // Filter: Only show active or upcoming reservations (not completed or cancelled)
+        // Also filter out invalid dates
+        const validReservations = data.data.filter(r => {
+            if (!r.startTime || !r.endTime) return false;
+            const start = new Date(r.startTime);
+            const end = new Date(r.endTime);
+            
+            // Exclude invalid dates
+            if (start.getFullYear() < 2020) return false;
+            
+            // Exclude completed and cancelled reservations
+            if (r.status === 'completed' || r.status === 'cancelled') return false;
+            
+            // Only show active (current time within range) or upcoming (future) reservations
+            return end >= now;
+        });
+
+        if (validReservations.length === 0) {
+            container.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <h3 class="text-lg font-medium text-gray-900 mb-2">No Active Barcodes</h3>
+                    <p class="text-gray-500 mb-4">Book a parking spot to get a barcode</p>
+                    <a href="/Dashboard/Book" class="inline-flex items-center px-4 py-2 bg-primary-600 text-white rounded-lg">Book Now</a>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = validReservations.map(r => {
+            const start = new Date(r.startTime);
+            const end = new Date(r.endTime);
+            const amount = r.totalAmount ? `Rs. ${r.totalAmount.toFixed(2)}` : '';
+            const dateStr = start.toLocaleDateString('en-IN');
+            const timeStr = `${start.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} - ${end.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}`;
+            const qrCode = r.qrCode || r.id || 'N/A';
+            const locationName = r.locationName || 'Parking';
+            const slotCode = r.slotCode || 'N/A';
+            const vehiclePlate = r.vehiclePlate || 'N/A';
+            
+            return `
+            <div class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition">
+                <div class="w-full h-24 bg-white rounded-lg mb-4 flex items-center justify-center p-1 overflow-hidden" id="barcode-container-${r.id}">
+                    <svg class="generated-barcode w-full h-full"
+                         data-format="CODE128"
+                         data-value="${qrCode}"
+                         data-textmargin="0"
+                         data-fontoptions="bold"
+                         data-displayvalue="false"
+                         data-height="80"
+                         data-width="2">
+                    </svg>
+                </div>
+                <div class="flex justify-between items-start mb-3">
+                    <div>
+                        <p class="font-medium text-gray-900">${locationName}</p>
+                        <p class="text-sm text-gray-500">${dateStr}</p>
+                        <p class="text-xs text-gray-400 mt-1 font-mono">${qrCode}</p>
+                    </div>
+                    <p class="text-lg font-bold text-primary-600">${amount}</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="showBarcodeModal('${qrCode}', '${locationName}', '${dateStr} ${timeStr}', '${amount}', '${slotCode}', '${vehiclePlate}')" 
+                            class="flex-1 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition text-sm">
+                        View
+                    </button>
+                    <a href="/api/payment/barcode/${r.id}" target="_blank"
+                            class="flex-1 py-2 border border-primary-600 text-primary-600 rounded-lg font-medium hover:bg-primary-50 transition text-sm text-center">
+                        Download
+                    </a>
+                </div>
+            </div>`;
+        }).join('');
+
+        // Initialize barcodes
+        try {
+            JsBarcode(".generated-barcode").init();
+        } catch (e) {
+            console.error("Barcode generation failed", e);
+        }
+
+    } catch (error) {
+        container.innerHTML = '<div class="col-span-full p-8 text-center text-gray-500">No barcodes yet. Book parking to see your barcodes here.</div>';
+    }
+}
+
+function showBarcodeModal(code, location, time, amount, slotCode, vehiclePlate) {
+    document.getElementById('modalCode').textContent = code;
+    document.getElementById('modalLocation').textContent = location;
+    document.getElementById('modalTime').textContent = time;
+    document.getElementById('modalAmount').textContent = amount || '';
+    
+    // Generate barcode in modal
+    try {
+        JsBarcode("#modalBarcode", code, {
+            format: "CODE128",
+            width: 2,
+            height: 80,
+            displayValue: true
+        });
+    } catch (e) {
+        console.error("Modal barcode generation failed", e);
+    }
+
+    document.getElementById('barcodeModal').classList.remove('hidden');
+}
+
+function closeBarcodeModal() {
+    document.getElementById('barcodeModal').classList.add('hidden');
+}
+
+</script>
+}

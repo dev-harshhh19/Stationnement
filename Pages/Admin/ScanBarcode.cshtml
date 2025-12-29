@@ -1,0 +1,477 @@
+@page
+@model Stationnement.Web.Pages.Admin.ScanBarcodeModel
+@{
+    ViewData["Title"] = "Scan Barcode";
+    Layout = "_AdminLayout";
+}
+
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="text-xl font-semibold text-gray-900">Barcode Scanner</h2>
+        <p class="text-gray-500">Scan or enter a reservation barcode to verify</p>
+    </div>
+</div>
+
+<!-- Scanner Mode Toggle -->
+<div class="flex gap-3 mb-6">
+    <button onclick="switchMode('camera')" id="cameraModeBtn" class="flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-primary-600 text-white">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Camera Scan
+    </button>
+    <button onclick="switchMode('manual')" id="manualModeBtn" class="flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+        Manual Entry
+    </button>
+</div>
+
+<!-- Camera Scanner -->
+<div id="cameraScannerSection" class="bg-white rounded-xl shadow-sm p-6 mb-6">
+    <div class="max-w-lg mx-auto">
+        <div id="qr-reader" class="rounded-xl overflow-hidden"></div>
+        <p class="text-sm text-gray-500 mt-3 text-center">Point camera at a barcode/QR code</p>
+        <div id="cameraError" class="hidden mt-4 p-4 bg-red-50 text-red-700 rounded-lg text-sm"></div>
+    </div>
+</div>
+
+<!-- Manual Input -->
+<div id="manualInputSection" class="bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+    <div class="max-w-lg">
+        <label class="block text-sm font-medium text-gray-700 mb-2">Enter Barcode / QR Code</label>
+        <div class="flex gap-3">
+            <input type="text" id="barcodeInput" placeholder="e.g., STN-A1B2C3D4"
+                class="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none font-mono text-lg"
+                onkeypress="if(event.key === 'Enter') verifyBarcode()" />
+            <button onclick="verifyBarcode()" id="verifyBtn" class="px-6 py-3 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                Verify
+            </button>
+        </div>
+        <p class="text-sm text-gray-500 mt-2">💡 Tip: Focus this input and scan with handheld scanner - it will auto-submit on Enter</p>
+    </div>
+</div>
+
+<!-- Result Container -->
+<div id="resultContainer" class="hidden">
+    <!-- Loading -->
+    <div id="loadingState" class="hidden bg-white rounded-xl shadow-sm p-12 text-center">
+        <div class="spinner mx-auto mb-4"></div>
+        <p class="text-gray-500">Verifying barcode...</p>
+    </div>
+
+    <!-- Valid Result -->
+    <div id="validResult" class="hidden">
+        <!-- Status Banner -->
+        <div id="statusBanner" class="rounded-xl px-6 py-4 mb-6 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <span id="statusIcon" class="text-4xl"></span>
+                <div>
+                    <h3 id="statusTitle" class="text-xl font-bold"></h3>
+                    <p id="timeMessage" class="opacity-80"></p>
+                </div>
+            </div>
+            <div id="actionButtons" class="flex gap-3">
+                <!-- Action buttons will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Reservation Details -->
+        <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-6">
+                <!-- Reservation Info -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                        Reservation Details
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-xs text-gray-500 uppercase">Reservation Code</p>
+                            <p id="resCode" class="font-mono font-bold text-gray-900"></p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-xs text-gray-500 uppercase">Status</p>
+                            <p id="resStatus" class="font-semibold"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                        Location
+                    </h4>
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p id="locationName" class="font-semibold text-gray-900"></p>
+                        <p id="locationAddress" class="text-sm text-gray-600"></p>
+                        <div class="mt-3 pt-3 border-t">
+                            <span class="text-sm text-gray-500">Slot:</span>
+                            <span id="slotCode" class="font-mono font-bold text-primary-600 ml-2"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+                <!-- Time Details -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Time Details
+                    </h4>
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                            <span class="text-gray-600">Start Time</span>
+                            <span id="startTime" class="font-medium text-gray-900"></span>
+                        </div>
+                        <div class="flex justify-between items-center bg-gray-50 rounded-lg p-3">
+                            <span class="text-gray-600">End Time</span>
+                            <span id="endTime" class="font-medium text-gray-900"></span>
+                        </div>
+                        <div id="checkInRow" class="hidden flex justify-between items-center bg-green-50 rounded-lg p-3">
+                            <span class="text-green-700">Check-In</span>
+                            <span id="checkInTime" class="font-medium text-green-800"></span>
+                        </div>
+                        <div id="checkOutRow" class="hidden flex justify-between items-center bg-blue-50 rounded-lg p-3">
+                            <span class="text-blue-700">Check-Out</span>
+                            <span id="checkOutTime" class="font-medium text-blue-800"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vehicle & Payment -->
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Vehicle & Payment
+                    </h4>
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-xs text-gray-500 uppercase">License Plate</p>
+                            <p id="vehiclePlate" class="font-mono font-bold text-gray-900"></p>
+                        </div>
+                        <div class="bg-gray-50 rounded-lg p-3">
+                            <p class="text-xs text-gray-500 uppercase">Vehicle Type</p>
+                            <p id="vehicleType" class="font-medium text-gray-900 capitalize"></p>
+                        </div>
+                    </div>
+                    <div class="bg-primary-50 rounded-lg p-4 flex justify-between items-center">
+                        <span class="text-primary-700 font-medium">Total Paid</span>
+                        <span id="totalAmount" class="text-2xl font-bold text-primary-700"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invalid Result -->
+    <div id="invalidResult" class="hidden">
+        <div class="bg-red-50 border border-red-200 rounded-xl p-8 text-center">
+            <div class="text-6xl mb-4">❌</div>
+            <h3 class="text-xl font-bold text-red-700 mb-2">Invalid Barcode</h3>
+            <p id="errorMessage" class="text-red-600"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions for recent scans -->
+<div id="recentScans" class="mt-8 hidden">
+    <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Scans</h3>
+    <div id="recentScansList" class="space-y-2"></div>
+</div>
+
+<style>
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e5e7eb;
+        border-top-color: #6366f1;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+    @@keyframes spin { to { transform: rotate(360deg); } }
+    #qr-reader { width: 100%; max-width: 400px; margin: 0 auto; }
+    #qr-reader video { border-radius: 12px; }
+    #qr-reader__scan_region { border-radius: 12px; overflow: hidden; }
+    #qr-reader__dashboard { padding-top: 10px; }
+</style>
+
+<!-- html5-qrcode library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<script>
+    let recentScans = JSON.parse(localStorage.getItem('adminRecentScans') || '[]');
+    let html5QrCode = null;
+    let currentMode = 'camera';
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderRecentScans();
+        initCameraScanner();
+    });
+
+    function switchMode(mode) {
+        currentMode = mode;
+        const cameraBtn = document.getElementById('cameraModeBtn');
+        const manualBtn = document.getElementById('manualModeBtn');
+        const cameraSection = document.getElementById('cameraScannerSection');
+        const manualSection = document.getElementById('manualInputSection');
+
+        if (mode === 'camera') {
+            cameraBtn.className = 'flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-primary-600 text-white';
+            manualBtn.className = 'flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200';
+            cameraSection.classList.remove('hidden');
+            manualSection.classList.add('hidden');
+            startCameraScanner();
+        } else {
+            manualBtn.className = 'flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-primary-600 text-white';
+            cameraBtn.className = 'flex-1 py-3 px-4 rounded-xl font-medium transition flex items-center justify-center gap-2 bg-gray-100 text-gray-700 hover:bg-gray-200';
+            manualSection.classList.remove('hidden');
+            cameraSection.classList.add('hidden');
+            stopCameraScanner();
+            document.getElementById('barcodeInput').focus();
+        }
+    }
+
+    function initCameraScanner() {
+        html5QrCode = new Html5Qrcode("qr-reader");
+        startCameraScanner();
+    }
+
+    function startCameraScanner() {
+        if (!html5QrCode) return;
+        const errorDiv = document.getElementById('cameraError');
+        errorDiv.classList.add('hidden');
+
+        Html5Qrcode.getCameras().then(cameras => {
+            if (cameras && cameras.length) {
+                // Prefer back camera
+                const backCamera = cameras.find(c => c.label.toLowerCase().includes('back')) || cameras[0];
+                html5QrCode.start(
+                    backCamera.id,
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    (decodedText) => {
+                        // Stop scanning and verify
+                        html5QrCode.stop().then(() => {
+                            document.getElementById('barcodeInput').value = decodedText;
+                            verifyBarcodeFromScan(decodedText);
+                        });
+                    },
+                    (errorMessage) => {
+                        // Ignore scan errors (no QR in frame)
+                    }
+                ).catch(err => {
+                    errorDiv.textContent = 'Camera error: ' + err;
+                    errorDiv.classList.remove('hidden');
+                });
+            } else {
+                errorDiv.textContent = 'No cameras found. Please use manual entry.';
+                errorDiv.classList.remove('hidden');
+            }
+        }).catch(err => {
+            errorDiv.textContent = 'Cannot access camera. Please allow camera permission or use manual entry.';
+            errorDiv.classList.remove('hidden');
+        });
+    }
+
+    function stopCameraScanner() {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().catch(err => console.log('Stop error:', err));
+        }
+    }
+
+    async function verifyBarcodeFromScan(code) {
+        document.getElementById('barcodeInput').value = code;
+        await verifyBarcode();
+        // Restart scanner after a delay
+        setTimeout(() => {
+            if (currentMode === 'camera') {
+                startCameraScanner();
+            }
+        }, 2000);
+    }
+
+    async function verifyBarcode() {
+        const code = document.getElementById('barcodeInput').value.trim();
+        if (!code) {
+            showToast('Please enter a barcode', 'warning');
+            return;
+        }
+
+        const resultContainer = document.getElementById('resultContainer');
+        const loadingState = document.getElementById('loadingState');
+        const validResult = document.getElementById('validResult');
+        const invalidResult = document.getElementById('invalidResult');
+
+        resultContainer.classList.remove('hidden');
+        loadingState.classList.remove('hidden');
+        validResult.classList.add('hidden');
+        invalidResult.classList.add('hidden');
+
+        try {
+            const token = localStorage.getItem('adminAccessToken');
+            const response = await fetch(`/api/reservation/verify/${encodeURIComponent(code)}`, {
+                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+            });
+            const data = await response.json();
+
+            loadingState.classList.add('hidden');
+
+            // Add to recent scans
+            addToRecentScans(code, data.success && data.data);
+
+            if (data.success && data.data) {
+                showValidResult(data);
+            } else {
+                showInvalidResult(data.message || 'Invalid barcode');
+            }
+        } catch (error) {
+            loadingState.classList.add('hidden');
+            showInvalidResult('Failed to verify barcode. Please try again.');
+        }
+    }
+
+    function showValidResult(data) {
+        const validResult = document.getElementById('validResult');
+        const statusBanner = document.getElementById('statusBanner');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const timeMessage = document.getElementById('timeMessage');
+        const actionButtons = document.getElementById('actionButtons');
+        const r = data.data;
+
+        // Set status banner
+        if (data.validityStatus === 'ACTIVE') {
+            statusBanner.className = 'rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-green-500 text-white';
+            statusIcon.textContent = '✅';
+            statusTitle.textContent = 'VALID - Active Reservation';
+            actionButtons.innerHTML = `
+                <button onclick="performCheckIn('${r.reservationCode}')" class="px-4 py-2 bg-white text-green-700 rounded-lg font-medium hover:bg-green-50">Check In</button>
+                <button onclick="performCheckOut('${r.reservationCode}')" class="px-4 py-2 bg-green-700 text-white rounded-lg font-medium hover:bg-green-800">Check Out</button>
+            `;
+        } else if (data.validityStatus === 'ALREADY_SCANNED') {
+            statusBanner.className = 'rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-amber-500 text-white';
+            statusIcon.textContent = '⚠️';
+            statusTitle.textContent = 'ALREADY SCANNED';
+            actionButtons.innerHTML = `
+                <span class="text-sm font-medium mr-3">Checked in at ${formatDateTime(r.checkInTime)}</span>
+                <button onclick="performCheckOut('${r.reservationCode}')" class="px-4 py-2 bg-white text-amber-700 rounded-lg font-medium hover:bg-amber-50">Check Out</button>
+            `;
+        } else if (data.validityStatus === 'COMPLETED') {
+            statusBanner.className = 'rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-gray-600 text-white';
+            statusIcon.textContent = '🏁';
+            statusTitle.textContent = 'COMPLETED';
+            actionButtons.innerHTML = `<span class="text-sm opacity-90">Reservation completed</span>`;
+        } else if (data.validityStatus === 'NOT_STARTED') {
+            statusBanner.className = 'rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-blue-500 text-white';
+            statusIcon.textContent = '⏳';
+            statusTitle.textContent = 'VALID - Not Started Yet';
+            actionButtons.innerHTML = `<span class="text-sm opacity-80">Entry not yet allowed</span>`;
+        } else if (data.validityStatus === 'EXPIRED') {
+            statusBanner.className = 'rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-red-500 text-white';
+            statusIcon.textContent = '⏰';
+            statusTitle.textContent = 'EXPIRED - No Longer Valid';
+            actionButtons.innerHTML = `<span class="text-sm opacity-80">Entry not allowed</span>`;
+        } else if (data.validityStatus === 'CANCELLED') {
+            statusBanner.className = 'rounded-xl px-6 py-4 mb-6 flex items-center justify-between bg-gray-500 text-white';
+            statusIcon.textContent = '🚫';
+            statusTitle.textContent = 'CANCELLED';
+            actionButtons.innerHTML = `<span class="text-sm opacity-80">Reservation was cancelled</span>`;
+        }
+
+        timeMessage.textContent = data.timeMessage;
+
+        // Fill in details
+        document.getElementById('resCode').textContent = r.reservationCode || 'N/A';
+        
+        const statusEl = document.getElementById('resStatus');
+        statusEl.textContent = (r.status || '').toUpperCase();
+        statusEl.className = r.status === 'confirmed' ? 'font-semibold text-green-600' : 
+                             r.status === 'cancelled' ? 'font-semibold text-red-600' : 'font-semibold text-gray-600';
+
+        document.getElementById('locationName').textContent = r.locationName || 'Unknown Location';
+        document.getElementById('locationAddress').textContent = r.locationAddress || '';
+        document.getElementById('slotCode').textContent = r.slotCode || 'N/A';
+        document.getElementById('startTime').textContent = formatDateTime(r.startTime);
+        document.getElementById('endTime').textContent = formatDateTime(r.endTime);
+        document.getElementById('vehiclePlate').textContent = r.vehiclePlate || 'N/A';
+        document.getElementById('vehicleType').textContent = r.vehicleType || 'N/A';
+        document.getElementById('totalAmount').textContent = '₹' + (r.totalAmount || 0).toFixed(2);
+
+        // Show check-in/out times if present
+        if (r.checkInTime) {
+            document.getElementById('checkInRow').classList.remove('hidden');
+            document.getElementById('checkInTime').textContent = formatDateTime(r.checkInTime);
+        } else {
+            document.getElementById('checkInRow').classList.add('hidden');
+        }
+
+        if (r.checkOutTime) {
+            document.getElementById('checkOutRow').classList.remove('hidden');
+            document.getElementById('checkOutTime').textContent = formatDateTime(r.checkOutTime);
+        } else {
+            document.getElementById('checkOutRow').classList.add('hidden');
+        }
+
+        validResult.classList.remove('hidden');
+    }
+
+    function showInvalidResult(message) {
+        document.getElementById('errorMessage').textContent = message;
+        document.getElementById('invalidResult').classList.remove('hidden');
+    }
+
+    async function performCheckIn(qrCode) {
+        if (!confirm('Confirm check-in for this reservation?')) return;
+        try {
+            const response = await fetch(`/api/reservation/checkin?qrCode=${encodeURIComponent(qrCode)}`, { method: 'POST' });
+            const data = await response.json();
+            showToast(data.success ? 'Check-in successful!' : data.message, data.success ? 'success' : 'error');
+            if (data.success) verifyBarcode();
+        } catch (e) { showToast('Check-in failed', 'error'); }
+    }
+
+    async function performCheckOut(qrCode) {
+        if (!confirm('Confirm check-out for this reservation?')) return;
+        try {
+            const response = await fetch(`/api/reservation/checkout?qrCode=${encodeURIComponent(qrCode)}`, { method: 'POST' });
+            const data = await response.json();
+            showToast(data.success ? 'Check-out successful!' : data.message, data.success ? 'success' : 'error');
+            if (data.success) verifyBarcode();
+        } catch (e) { showToast('Check-out failed', 'error'); }
+    }
+
+    function formatDateTime(dateStr) {
+        if (!dateStr) return 'N/A';
+        const date = new Date(dateStr);
+        return date.toLocaleString('en-IN', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function addToRecentScans(code, isValid) {
+        recentScans = recentScans.filter(s => s.code !== code);
+        recentScans.unshift({ code, isValid, time: new Date().toISOString() });
+        recentScans = recentScans.slice(0, 5);
+        localStorage.setItem('adminRecentScans', JSON.stringify(recentScans));
+        renderRecentScans();
+    }
+
+    function renderRecentScans() {
+        if (recentScans.length === 0) return;
+        document.getElementById('recentScans').classList.remove('hidden');
+        const list = document.getElementById('recentScansList');
+        list.innerHTML = recentScans.map(s => `
+            <button onclick="document.getElementById('barcodeInput').value='${s.code}'; verifyBarcode();" 
+                class="w-full flex items-center justify-between p-3 bg-white rounded-lg border hover:bg-gray-50 transition">
+                <span class="font-mono">${s.code}</span>
+                <span class="${s.isValid ? 'text-green-600' : 'text-red-600'}">${s.isValid ? '✓ Valid' : '✗ Invalid'}</span>
+            </button>
+        `).join('');
+    }
+
+    function scanAgain() {
+        document.getElementById('barcodeInput').value = '';
+        document.getElementById('barcodeInput').focus();
+        document.getElementById('resultContainer').classList.add('hidden');
+    }
+</script>

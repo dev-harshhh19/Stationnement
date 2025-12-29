@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff', 100: '#dbeafe', 200: '#bfdbfe', 300: '#93c5fd',
+                            400: '#60a5fa', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8',
+                            800: '#1e40af', 900: '#1e3a8a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+    <style>
+        .sidebar-transition { transition: transform 0.3s ease-in-out; }
+        .overlay { transition: opacity 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Mobile Overlay -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden overlay" onclick="toggleSidebar()"></div>
+
+    <div class="flex">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-64 bg-gray-900 min-h-screen fixed z-50 sidebar-transition -translate-x-full lg:translate-x-0">
+            <div class="p-4 lg:p-6 flex items-center justify-between">
+                <a href="/Admin" class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary-600 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="text-lg font-bold text-white">Stationnement</span>
+                        <span class="block text-xs text-gray-400">Admin Panel</span>
+                    </div>
+                </a>
+                <!-- Mobile Close Button -->
+                <button onclick="toggleSidebar()" class="lg:hidden text-gray-400 hover:text-white p-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <nav class="px-3 lg:px-4 space-y-1 pb-6 max-h-[calc(100vh-80px)] overflow-y-auto">
+                <a href="/Admin" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Dashboard
+                </a>
+                <a href="/Admin/Analytics" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Analytics
+                </a>
+                <div class="pt-4 pb-2 px-3 lg:px-4 text-xs text-gray-500 uppercase">Parking</div>
+                <a href="/Admin/Locations" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    </svg>
+                    Locations
+                </a>
+                <a href="/Admin/Slots" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                    </svg>
+                    Slots
+                </a>
+                <a href="/Admin/Pricing" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Pricing
+                </a>
+                <a href="/Admin/ScanBarcode" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                    Scan Barcode
+                </a>
+                <div class="pt-4 pb-2 px-3 lg:px-4 text-xs text-gray-500 uppercase">Users</div>
+                <a href="/Admin/Users" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Users
+                </a>
+                <a href="/Admin/Reservations" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Reservations
+                </a>
+                <div class="pt-4 pb-2 px-3 lg:px-4 text-xs text-gray-500 uppercase">System</div>
+                <a href="/Admin/AuditLogs" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Audit Logs
+                </a>
+                <a href="/Admin/Settings" class="flex items-center px-3 lg:px-4 py-3 text-gray-300 rounded-xl hover:bg-gray-800 hover:text-white transition text-sm lg:text-base" onclick="closeSidebarMobile()">
+                    <svg class="w-5 h-5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Settings
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 min-h-screen">
+            <header class="bg-white shadow-sm py-3 lg:py-4 px-4 lg:px-6 flex items-center justify-between sticky top-0 z-30">
+                <!-- Mobile Menu Button -->
+                <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-gray-100 mr-2">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                <h1 class="text-lg lg:text-xl font-semibold text-gray-900 truncate">@ViewData["Title"]</h1>
+                <div class="flex items-center space-x-2 lg:space-x-4">
+                    <span class="hidden sm:inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">Admin</span>
+                    <div class="w-8 h-8 lg:w-10 lg:h-10 bg-gray-700 rounded-full flex items-center justify-center">
+                        <span class="text-white font-medium text-sm lg:text-base" id="adminInitials">A</span>
+                    </div>
+                    <button onclick="logout()" class="text-gray-500 hover:text-red-600 p-1">
+                        <svg class="w-5 h-5 lg:w-6 lg:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+            <div class="p-4 lg:p-6">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="fixed top-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+    @await RenderSectionAsync("Scripts", required: false)
+    
+    <script>
+        // Toast notification system
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-amber-500',
+                info: 'bg-blue-500'
+            };
+            
+            const icons = {
+                success: '✓',
+                error: '✗',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            toast.className = `pointer-events-auto ${colors[type] || colors.info} text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 transform translate-x-full opacity-0 transition-all duration-300`;
+            toast.innerHTML = `
+                <span class="w-6 h-6 flex items-center justify-center bg-white/20 rounded-full text-sm">${icons[type] || icons.info}</span>
+                <span class="flex-1 text-sm font-medium">${message}</span>
+                <button onclick="this.parentElement.remove()" class="hover:bg-white/20 rounded p-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+            });
+            
+            setTimeout(() => {
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+        // Check admin session
+        (function() {
+            const token = localStorage.getItem('adminAccessToken');
+            if (!token) {
+                window.location.href = '/Admin/Login';
+                return;
+            }
+            
+            // Validate session
+            fetch('/api/admin/auth/validate', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            }).then(r => r.json()).then(data => {
+                if (!data.valid) {
+                    localStorage.removeItem('adminAccessToken');
+                    window.location.href = '/Admin/Login';
+                } else {
+                    const initials = document.getElementById('adminInitials');
+                    if (data.email && initials) {
+                        initials.textContent = data.email.charAt(0).toUpperCase();
+                    }
+                }
+            }).catch(() => {
+                localStorage.removeItem('adminAccessToken');
+                window.location.href = '/Admin/Login';
+            });
+        })();
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+            document.body.classList.toggle('overflow-hidden');
+        }
+
+        function closeSidebarMobile() {
+            if (window.innerWidth < 1024) {
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        async function logout() {
+            const token = localStorage.getItem('adminAccessToken');
+            try {
+                await fetch('/api/admin/auth/logout', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+            } catch (e) {}
+            localStorage.removeItem('adminAccessToken');
+            window.location.href = '/Admin/Login';
+        }
+
+        // Close sidebar on window resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                closeSidebarMobile();
+            }
+        });
+    </script>
+</body>
+</html>

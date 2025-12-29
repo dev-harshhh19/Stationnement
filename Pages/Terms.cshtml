@@ -1,0 +1,211 @@
+@page
+@model Stationnement.Web.Pages.TermsModel
+@{
+    ViewData["Title"] = "Terms of Service";
+}
+
+<section class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <span class="text-primary-200 font-semibold text-sm uppercase tracking-wider">Legal</span>
+        <h1 class="text-4xl md:text-5xl font-bold text-white mt-2 mb-4">Terms of Service</h1>
+        <p class="text-primary-100 text-lg">Last updated: December 2025</p>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Quick Navigation -->
+        <div class="bg-gray-50 rounded-2xl p-6 mb-12">
+            <h3 class="font-semibold text-gray-900 mb-4">Quick Navigation</h3>
+            <div class="grid md:grid-cols-3 gap-3 text-sm">
+                <a href="#agreement" class="text-primary-600 hover:text-primary-700">→ Agreement to Terms</a>
+                <a href="#service" class="text-primary-600 hover:text-primary-700">→ Our Service</a>
+                <a href="#accounts" class="text-primary-600 hover:text-primary-700">→ User Accounts</a>
+                <a href="#reservations" class="text-primary-600 hover:text-primary-700">→ Reservations</a>
+                <a href="#responsibilities" class="text-primary-600 hover:text-primary-700">→ Responsibilities</a>
+                <a href="#contact-terms" class="text-primary-600 hover:text-primary-700">→ Contact</a>
+            </div>
+        </div>
+
+        <!-- Content Cards -->
+        <div class="space-y-8">
+            <!-- Agreement -->
+            <div id="agreement" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">1. Agreement to Terms</h2>
+                        <p class="text-gray-600">By accessing or using Stationnement's parking reservation services ("Service"), you agree to be bound by these Terms of Service. If you do not agree to these Terms, please do not use our Service.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Service Description -->
+            <div id="service" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">2. Description of Service</h2>
+                        <p class="text-gray-600 mb-4">Stationnement provides an online platform that allows users to:</p>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Search for parking spaces</span></div>
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Reserve spots in advance</span></div>
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Pay for parking online</span></div>
+                            <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-3"><svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg><span class="text-sm text-gray-600">Access via barcode</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Accounts -->
+            <div id="accounts" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">3. User Accounts</h2>
+                        <div class="space-y-2">
+                            <div class="flex items-start gap-2"><span class="text-primary-500 font-bold">•</span><span class="text-gray-600">You must be at least 18 years old to create an account</span></div>
+                            <div class="flex items-start gap-2"><span class="text-primary-500 font-bold">•</span><span class="text-gray-600">You are responsible for maintaining account security</span></div>
+                            <div class="flex items-start gap-2"><span class="text-primary-500 font-bold">•</span><span class="text-gray-600">You must provide accurate and complete information</span></div>
+                            <div class="flex items-start gap-2"><span class="text-primary-500 font-bold">•</span><span class="text-gray-600">You are responsible for all activities under your account</span></div>
+                            <div class="flex items-start gap-2"><span class="text-primary-500 font-bold">•</span><span class="text-gray-600">Notify us immediately of any unauthorized use</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reservations & Payments -->
+            <div id="reservations" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">4. Reservations & Payments</h2>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="bg-blue-50 rounded-xl p-4">
+                                <h4 class="font-semibold text-blue-900 mb-2">📅 Booking</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Confirmed upon payment</li>
+                                    <li>• Barcode for entry/exit</li>
+                                    <li>• Arrive on time</li>
+                                </ul>
+                            </div>
+                            <div class="bg-green-50 rounded-xl p-4">
+                                <h4 class="font-semibold text-green-900 mb-2">💰 Pricing</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Shown before booking</li>
+                                    <li>• Dynamic based on demand</li>
+                                    <li>• Subscription discounts apply</li>
+                                </ul>
+                            </div>
+                            <div class="bg-amber-50 rounded-xl p-4">
+                                <h4 class="font-semibold text-amber-900 mb-2">❌ Cancellation</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Free 2+ hours before</li>
+                                    <li>• Late cancellation fee</li>
+                                    <li>• No-show = full charge</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsibilities -->
+            <div id="responsibilities" class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4">5. User Responsibilities</h2>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="bg-green-50 border border-green-100 rounded-xl p-4">
+                                <h4 class="font-semibold text-green-800 mb-2">✓ You Must</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Park only in your designated spot</li>
+                                    <li>• Provide accurate vehicle info</li>
+                                    <li>• Follow parking facility rules</li>
+                                    <li>• Respect other users</li>
+                                </ul>
+                            </div>
+                            <div class="bg-red-50 border border-red-100 rounded-xl p-4">
+                                <h4 class="font-semibold text-red-800 mb-2">✗ You Must Not</h4>
+                                <ul class="text-sm text-gray-600 space-y-1">
+                                    <li>• Share your barcode</li>
+                                    <li>• Circumvent payment</li>
+                                    <li>• Damage property</li>
+                                    <li>• Abuse promotions</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Limitation of Liability -->
+            <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">6. Limitation of Liability</h2>
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-3">
+                            <p class="text-amber-800 text-sm">⚠️ Stationnement is not liable for damage/theft to vehicles, facility operator issues, or service interruptions beyond our control.</p>
+                        </div>
+                        <p class="text-gray-600 text-sm">Our total liability shall not exceed the amount paid by you in the last 12 months.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Governing Law -->
+            <div class="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">7. Governing Law</h2>
+                        <p class="text-gray-600">These Terms are governed by the laws of <strong>India</strong>. Any disputes shall be resolved in the courts of <strong>Kalyan, Mumbai, India</strong>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div id="contact-terms" class="bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 rounded-2xl p-6">
+                <div class="flex items-start gap-4">
+                    <div class="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-gray-900 mb-3">Contact</h2>
+                        <p class="text-gray-600 mb-4">For questions about these Terms:</p>
+                        <div class="flex flex-wrap gap-4">
+                            <a href="mailto:nikamharshadshivaji@gmail.com" class="flex items-center gap-2 bg-white px-4 py-2 rounded-lg text-primary-600 hover:bg-primary-600 hover:text-white transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                nikamharshadshivaji@gmail.com
+                            </a>
+                            <span class="flex items-center gap-2 text-gray-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                                Kalyan, Mumbai, India
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Updated Note -->
+        <div class="mt-12 text-center text-sm text-gray-500">
+            <p>We reserve the right to modify these Terms at any time. Continued use constitutes acceptance.</p>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,107 @@
+@page
+@model Stationnement.Web.Pages.Admin.SlotsModel
+@{
+    ViewData["Title"] = "Manage Slots";
+    Layout = "_AdminLayout";
+}
+
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="text-xl font-semibold text-gray-900">Parking Slots</h2>
+        <p class="text-gray-500">View all parking slots by location</p>
+    </div>
+    <select id="locationFilter" onchange="loadSlots()" class="px-4 py-2 border rounded-lg min-w-[200px]">
+        <option value="">All Locations</option>
+    </select>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Slot Code</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Floor</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Price/Hr</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            </tr>
+        </thead>
+        <tbody id="slotsTable" class="divide-y divide-gray-200">
+            <tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<p class="mt-4 text-sm text-gray-500" id="slotCount"></p>
+
+@section Scripts {
+<script>
+const token = localStorage.getItem('adminAccessToken');
+const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+
+document.addEventListener('DOMContentLoaded', async () => {
+    await loadLocations();
+    await loadSlots();
+});
+
+async function loadLocations() {
+    try {
+        const response = await fetch('/api/admin/locations', { headers });
+        const data = await response.json();
+        if (data.success) {
+            const select = document.getElementById('locationFilter');
+            data.data.forEach(l => {
+                const opt = document.createElement('option');
+                opt.value = l.id;
+                opt.textContent = l.name;
+                select.appendChild(opt);
+            });
+        }
+    } catch (e) { console.error(e); }
+}
+
+async function loadSlots() {
+    const locationId = document.getElementById('locationFilter').value;
+    try {
+        const url = `/api/admin/slots${locationId ? `?locationId=${locationId}` : ''}`;
+        const response = await fetch(url, { headers });
+        const data = await response.json();
+        if (data.success) {
+            renderSlots(data.data);
+            document.getElementById('slotCount').textContent = `${data.data.length} slots found`;
+        }
+    } catch (e) {
+        document.getElementById('slotsTable').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-red-500">Failed to load</td></tr>';
+    }
+}
+
+function renderSlots(slots) {
+    const tbody = document.getElementById('slotsTable');
+    if (!slots || slots.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">No slots found</td></tr>';
+        return;
+    }
+    tbody.innerHTML = slots.map(s => {
+        const isBooked = s.current_status === 'booked';
+        const statusClass = isBooked ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700';
+        const statusText = isBooked ? 'Booked' : 'Available';
+        const bookedUntil = s.booked_until ? ` until ${new Date(s.booked_until).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}` : '';
+        
+        return `
+        <tr class="${isBooked ? 'bg-red-50/30' : ''}">
+            <td class="px-6 py-4 font-mono font-medium text-gray-900">${s.slot_code}</td>
+            <td class="px-6 py-4 text-gray-500">${s.location_name || 'N/A'}</td>
+            <td class="px-6 py-4">${s.floor || 1}</td>
+            <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs ${s.is_premium ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'}">${s.slot_type || (s.is_premium ? 'Premium' : 'Standard')}</span></td>
+            <td class="px-6 py-4">₹${(s.base_price_per_hour || 25).toFixed(2)}</td>
+            <td class="px-6 py-4">
+                <span class="px-2 py-1 rounded-full text-xs font-medium ${statusClass}">${statusText}</span>
+                ${isBooked ? `<span class="text-xs text-gray-500 ml-1">${bookedUntil}</span>` : ''}
+            </td>
+        </tr>
+    `;
+    }).join('');
+}
+</script>
+}

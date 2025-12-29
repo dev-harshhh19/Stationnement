@@ -1,0 +1,105 @@
+@page
+@model Stationnement.Web.Pages.Admin.ReservationsModel
+@{
+    ViewData["Title"] = "All Reservations";
+    Layout = "_AdminLayout";
+}
+
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h2 class="text-xl font-semibold text-gray-900">All Reservations</h2>
+        <p class="text-gray-500">View and manage parking reservations</p>
+    </div>
+    <select id="statusFilter" onchange="loadReservations()" class="px-4 py-2 border rounded-lg">
+        <option value="">All Status</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+        <option value="cancelled">Cancelled</option>
+    </select>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            </tr>
+        </thead>
+        <tbody id="reservationsTable" class="divide-y divide-gray-200">
+            <tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-4 flex justify-between items-center">
+    <p class="text-sm text-gray-500" id="resCount">Loading...</p>
+    <div class="flex gap-2">
+        <button onclick="prevPage()" id="prevBtn" class="px-4 py-2 border rounded-lg disabled:opacity-50" disabled>Previous</button>
+        <button onclick="nextPage()" id="nextBtn" class="px-4 py-2 border rounded-lg disabled:opacity-50">Next</button>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const token = localStorage.getItem('adminAccessToken');
+const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+let currentPage = 1, totalCount = 0;
+
+document.addEventListener('DOMContentLoaded', loadReservations);
+
+async function loadReservations() {
+    const status = document.getElementById('statusFilter').value;
+    try {
+        const url = `/api/admin/reservations?page=${currentPage}&pageSize=20${status ? `&status=${status}` : ''}`;
+        const response = await fetch(url, { headers });
+        const data = await response.json();
+        if (data.success) {
+            totalCount = data.totalCount;
+            renderReservations(data.data);
+            document.getElementById('resCount').textContent = `Page ${currentPage} of ${Math.ceil(totalCount / 20)} (${totalCount} total)`;
+            document.getElementById('prevBtn').disabled = currentPage <= 1;
+            document.getElementById('nextBtn').disabled = currentPage >= Math.ceil(totalCount / 20);
+        }
+    } catch (e) {
+        document.getElementById('reservationsTable').innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-red-500">Failed to load</td></tr>';
+    }
+}
+
+function renderReservations(reservations) {
+    const tbody = document.getElementById('reservationsTable');
+    if (!reservations || reservations.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500">No reservations found</td></tr>';
+        return;
+    }
+    tbody.innerHTML = reservations.map(r => `
+        <tr>
+            <td class="px-6 py-4 font-mono text-sm text-gray-900">${r.reservation_code || r.qr_code || 'N/A'}</td>
+            <td class="px-6 py-4 text-gray-500">${r.first_name || ''} ${r.last_name || ''}<br><span class="text-xs">${r.user_email}</span></td>
+            <td class="px-6 py-4 text-gray-500">${r.location_name || 'N/A'}<br><span class="text-xs">${r.slot_code || ''}</span></td>
+            <td class="px-6 py-4 text-gray-500 text-sm">${formatDate(r.start_time)}<br>to ${formatDate(r.end_time)}</td>
+            <td class="px-6 py-4 font-medium">₹${(r.total_amount || r.total_price || 0).toFixed(2)}</td>
+            <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs capitalize ${getStatusClass(r.status)}">${r.status || 'pending'}</span></td>
+        </tr>
+    `).join('');
+}
+
+function formatDate(d) { return d ? new Date(d).toLocaleString('en-IN', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A'; }
+function getStatusClass(s) {
+    switch(s) {
+        case 'active': case 'checked_in': return 'bg-green-100 text-green-700';
+        case 'confirmed': return 'bg-blue-100 text-blue-700';
+        case 'completed': return 'bg-gray-100 text-gray-700';
+        case 'cancelled': return 'bg-red-100 text-red-700';
+        default: return 'bg-yellow-100 text-yellow-700';
+    }
+}
+function prevPage() { if (currentPage > 1) { currentPage--; loadReservations(); } }
+function nextPage() { currentPage++; loadReservations(); }
+</script>
+}

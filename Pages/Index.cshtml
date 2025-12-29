@@ -1,0 +1,156 @@
+﻿@page
+@model Stationnement.Web.Pages.IndexModel
+@{
+    ViewData["Title"] = "Smart Parking Management";
+}
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-900 py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-bold text-white mb-6">
+                Smart Parking<br/>Made Simple
+            </h1>
+            <p class="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+                Find, reserve, and pay for parking in seconds. No more circling the block or fumbling for change.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/Dashboard/Book" class="bg-white text-primary-700 font-bold py-4 px-8 rounded-xl hover:bg-primary-50 transition shadow-lg">
+                    Find Parking Now
+                </a>
+                <a href="#how-it-works" class="border-2 border-white text-white font-bold py-4 px-8 rounded-xl hover:bg-white/10 transition">
+                    How It Works
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="py-12 bg-white border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+                <p class="text-4xl font-bold text-primary-600">50+</p>
+                <p class="text-gray-600">Locations</p>
+            </div>
+            <div>
+                <p class="text-4xl font-bold text-primary-600">10K+</p>
+                <p class="text-gray-600">Happy Users</p>
+            </div>
+            <div>
+                <p class="text-4xl font-bold text-primary-600">5K+</p>
+                <p class="text-gray-600">Parking Spots</p>
+            </div>
+            <div>
+                <p class="text-4xl font-bold text-primary-600">99%</p>
+                <p class="text-gray-600">Satisfaction</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features -->
+<section id="features" class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <span class="text-primary-600 font-semibold text-sm uppercase tracking-wider">Why Choose Us</span>
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mt-2 mb-4">Smart Features for Smart Parking</h2>
+            <p class="text-gray-600 max-w-2xl mx-auto">Everything you need for hassle-free parking, all in one place.</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition group">
+                <div class="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary-600 transition">
+                    <svg class="w-7 h-7 text-primary-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Real-Time Availability</h3>
+                <p class="text-gray-600">See exactly which spots are free, right now. Live updates ensure you never waste time.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition group">
+                <div class="w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-green-600 transition">
+                    <svg class="w-7 h-7 text-green-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Barcode Entry</h3>
+                <p class="text-gray-600">Just scan your barcode at the entrance. No tickets, no barriers, no hassle.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition group">
+                <div class="w-14 h-14 bg-purple-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-purple-600 transition">
+                    <svg class="w-7 h-7 text-purple-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Secure UPI Payments</h3>
+                <p class="text-gray-600">Pay instantly with UPI. Fast, secure, and hassle-free transactions.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition group">
+                <div class="w-14 h-14 bg-yellow-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-yellow-500 transition">
+                    <svg class="w-7 h-7 text-yellow-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">EV Charging Spots</h3>
+                <p class="text-gray-600">Find parking with EV charging stations. Charge while you park.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition group">
+                <div class="w-14 h-14 bg-blue-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition">
+                    <svg class="w-7 h-7 text-blue-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Mobile Friendly</h3>
+                <p class="text-gray-600">Book and manage parking from any device. Works on all phones and tablets.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-lg transition group">
+                <div class="w-14 h-14 bg-red-100 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-600 transition">
+                    <svg class="w-7 h-7 text-red-600 group-hover:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">24/7 Support</h3>
+                <p class="text-gray-600">Need help? Our support team is always available to assist you.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section id="how-it-works" class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <p class="text-gray-600">Park in 3 simple steps</p>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">1</div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Find & Book</h3>
+                <p class="text-gray-600">Search for parking near your destination and reserve a spot in advance.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">2</div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Get Barcode</h3>
+                <p class="text-gray-600">Receive your barcode instantly via email and in your dashboard.</p>
+            </div>
+            <div class="text-center">
+                <div class="w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white text-2xl font-bold">3</div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-3">Park & Go</h3>
+                <p class="text-gray-600">Scan your barcode at the entrance and park. It's that simple!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-primary-600">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl font-bold text-white mb-6">Ready to simplify your parking?</h2>
+        <p class="text-primary-100 mb-8">Join thousands of happy drivers using Stationnement.</p>
+        <a href="/Auth/Register" class="inline-block bg-white text-primary-700 font-bold py-4 px-8 rounded-xl hover:bg-primary-50 transition shadow-lg">
+            Get Started Free
+        </a>
+    </div>
+</section>

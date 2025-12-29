@@ -1,0 +1,83 @@
+@page
+@model Stationnement.Web.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "_AdminLayout";
+}
+
+<div class="mb-6">
+    <h2 class="text-xl font-semibold text-gray-900">All Users</h2>
+    <p class="text-gray-500">View and manage registered users</p>
+</div>
+
+<div class="bg-white rounded-xl shadow-sm overflow-hidden">
+    <table class="w-full">
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Joined</th>
+                <th class="px-6 py-4 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+            </tr>
+        </thead>
+        <tbody id="usersTable" class="divide-y divide-gray-200">
+            <tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">Loading...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-4 flex justify-between items-center">
+    <p class="text-sm text-gray-500" id="userCount">Loading...</p>
+    <div class="flex gap-2">
+        <button onclick="prevPage()" id="prevBtn" class="px-4 py-2 border rounded-lg disabled:opacity-50" disabled>Previous</button>
+        <button onclick="nextPage()" id="nextBtn" class="px-4 py-2 border rounded-lg disabled:opacity-50">Next</button>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const token = localStorage.getItem('adminAccessToken');
+const headers = { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' };
+let currentPage = 1;
+let totalUsers = 0;
+
+document.addEventListener('DOMContentLoaded', loadUsers);
+
+async function loadUsers() {
+    try {
+        const response = await fetch(`/api/admin/users?page=${currentPage}&pageSize=20`, { headers });
+        const data = await response.json();
+        if (data.success) {
+            totalUsers = data.totalCount;
+            renderUsers(data.data);
+            document.getElementById('userCount').textContent = `Showing page ${currentPage} of ${Math.ceil(totalUsers / 20)} (${totalUsers} total users)`;
+            document.getElementById('prevBtn').disabled = currentPage <= 1;
+            document.getElementById('nextBtn').disabled = currentPage >= Math.ceil(totalUsers / 20);
+        }
+    } catch (e) {
+        document.getElementById('usersTable').innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Failed to load</td></tr>';
+    }
+}
+
+function renderUsers(users) {
+    const tbody = document.getElementById('usersTable');
+    if (!users || users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-gray-500">No users found</td></tr>';
+        return;
+    }
+    tbody.innerHTML = users.map(u => `
+        <tr>
+            <td class="px-6 py-4 font-medium text-gray-900">${u.first_name || ''} ${u.last_name || ''}</td>
+            <td class="px-6 py-4 text-gray-500">${u.email}</td>
+            <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs ${u.role_name === 'Admin' ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}">${u.role_name || 'User'}</span></td>
+            <td class="px-6 py-4 text-gray-500">${new Date(u.created_at).toLocaleDateString()}</td>
+            <td class="px-6 py-4"><span class="px-2 py-1 rounded-full text-xs ${u.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}">${u.is_active ? 'Active' : 'Inactive'}</span></td>
+        </tr>
+    `).join('');
+}
+
+function prevPage() { if (currentPage > 1) { currentPage--; loadUsers(); } }
+function nextPage() { currentPage++; loadUsers(); }
+</script>
+}
