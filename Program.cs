@@ -75,10 +75,20 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IPricingService, PricingService>();
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
 
-// JWT Authentication
-var jwtSecret = builder.Configuration["Jwt:Secret"];
-var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-var jwtAudience = builder.Configuration["Jwt:Audience"];
+// JWT Authentication - build from environment variables
+var jwtSecret = Environment.GetEnvironmentVariable("JWT_SECRET");
+var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? builder.Configuration["Jwt:Issuer"];
+var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? builder.Configuration["Jwt:Audience"];
+
+// Validate that JWT Secret is configured
+if (string.IsNullOrEmpty(jwtSecret))
+{
+    throw new InvalidOperationException(
+        "JWT Secret is not configured. Please set JWT_SECRET environment variable in your .env file. " +
+        "See .env.example for reference.");
+}
+
+Console.WriteLine("[CONFIG] Using JWT configuration from environment variables");
 
 builder.Services.AddAuthentication(options =>
 {
