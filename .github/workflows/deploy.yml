@@ -12,6 +12,10 @@ env:
   BUILD_CONFIGURATION: Release
   PUBLISH_PATH: ./publish
 
+permissions:
+  contents: write
+  packages: read
+
 jobs:
   build:
     name: Build & Test
@@ -81,30 +85,33 @@ jobs:
           Compress-Archive -Path ${{ env.PUBLISH_PATH }} -DestinationPath stationnement-release.zip
         shell: pwsh
 
-      - name: Get version
-        id: version
+      - name: Generate release info
+        id: release_info
         run: |
           $version = Get-Date -Format 'yyyy.MM.dd.HHmm'
-          echo "release_version=$version" >> $GITHUB_OUTPUT
+          $commit = "${{ github.sha }}".Substring(0, 7)
+          echo "version=$version" >> $env:GITHUB_OUTPUT
+          echo "commit=$commit" >> $env:GITHUB_OUTPUT
         shell: pwsh
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
           files: stationnement-release.zip
-          tag_name: v${{ steps.version.outputs.release_version }}
-          name: Release ${{ steps.version.outputs.release_version }}
+          tag_name: v${{ steps.release_info.outputs.version }}
+          name: Release v${{ steps.release_info.outputs.version }}
           body: |
-            # Stationnement Release ${{ steps.version.outputs.release_version }}
+            # Stationnement Release v${{ steps.release_info.outputs.version }}
             
             **Build Information:**
             - Commit: ${{ github.sha }}
+            - Short Commit: ${{ steps.release_info.outputs.commit }}
             - Branch: ${{ github.ref_name }}
             - Author: ${{ github.actor }}
-            - Date: ${{ github.event.head_commit.timestamp }}
+            - Timestamp: ${{ github.event.head_commit.timestamp }}
             
             ## Installation
-            Extract the `stationnement-release.zip` file and follow the deployment guide.
+            Extract the `stationnement-release.zip` file and follow the deployment guide in the repository.
           draft: false
           prerelease: false
         env:
